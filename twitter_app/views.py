@@ -59,3 +59,26 @@ def signup(request):
     else:
       return index(request, user_form=user_form)
   return redirect('/')
+
+
+@login_required
+def submit(request):
+  if request.method == 'POST':
+    tweet_form = TweetForm(data=request.POST)
+    next_url = request.POST.get('next_url','/')
+    if tweet_form.is_valid():
+      tweet=tweet_form.save(commit=False)
+      tweet.user=request.user
+      tweet.save()
+      return redirect(next_url)
+    else:
+      return public(request, tweet_form)
+  return redirect('/')
+
+@login_required
+def public(request, tweet_form=None):
+  tweet_form = tweet_form or TweetForm()
+  tweets = Tweet.objects.reverse()[:10]
+  return render(request,
+                'public.html',
+                {'tweet_form':tweet_form,'next_url':'/tweets','tweets':tweets,'username':request.user.username})

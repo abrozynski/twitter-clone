@@ -1,0 +1,1 @@
+A twitter clone from http://code.tutsplus.com/tutorials/building-ribbit-in-django--net-29957
